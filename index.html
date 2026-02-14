@@ -12,73 +12,117 @@
         }
 
         body {
-            font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
-            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-            min-height: 100vh;
-            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif;
+            background: #000;
+            color: white;
+            padding: 0;
+            overflow-x: hidden;
         }
 
-        .header {
-            text-align: center;
-            padding: 40px 20px;
-            margin-bottom: 40px;
-            background: rgba(255,255,255,0.9);
-            border-radius: 25px;
-            box-shadow: 0 8px 25px rgba(252,182,159,0.3);
+        .hero {
+            height: 40vh;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-50px, -50px); }
         }
 
         h1 {
-            color: #ff6b9d;
-            font-size: 2.8em;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(255,107,157,0.2);
-        }
-
-        .subtitle {
-            color: #ff8fab;
-            font-size: 1.2em;
-            font-weight: 500;
+            font-size: 4em;
+            font-weight: 800;
+            letter-spacing: 3px;
+            z-index: 1;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            background: linear-gradient(to right, #fff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
+            padding: 60px 20px;
         }
 
         .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
         }
 
         .gallery-item {
-            background: white;
+            position: relative;
             border-radius: 20px;
             overflow: hidden;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(252,182,159,0.3);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #111;
+            aspect-ratio: 1;
+        }
+
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(102,126,234,0.4) 0%, rgba(118,75,162,0.4) 100%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 2;
+        }
+
+        .gallery-item:hover::before {
+            opacity: 1;
         }
 
         .gallery-item:hover {
-            transform: translateY(-8px) rotate(1deg);
-            box-shadow: 0 15px 30px rgba(252,182,159,0.5);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(102,126,234,0.4);
         }
 
         .gallery-item img {
             width: 100%;
-            aspect-ratio: 1;
+            height: 100%;
             object-fit: cover;
             display: block;
+            transition: transform 0.5s;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
         }
 
         .gallery-item .number {
-            padding: 18px;
-            text-align: center;
-            color: #ff6b9d;
-            font-size: 1.1em;
-            background: linear-gradient(135deg, #fff5f7 0%, #ffe4ec 100%);
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 1em;
+            z-index: 3;
             font-weight: 600;
+            border: 2px solid rgba(255,255,255,0.2);
         }
 
         /* モーダル */
@@ -89,15 +133,22 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255,107,157,0.95);
+            background: rgba(0,0,0,0.98);
             z-index: 1000;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            backdrop-filter: blur(20px);
         }
 
         .modal.active {
             display: flex;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .modal-content {
@@ -110,76 +161,91 @@
             max-width: 100%;
             max-height: 90vh;
             border-radius: 15px;
-            box-shadow: 0 15px 50px rgba(255,255,255,0.3);
-            border: 5px solid white;
+            box-shadow: 0 20px 80px rgba(102,126,234,0.5);
+            border: 3px solid rgba(255,255,255,0.1);
         }
 
         .close {
             position: absolute;
-            top: -50px;
+            top: -60px;
             right: 0;
             color: white;
-            font-size: 45px;
+            font-size: 50px;
             cursor: pointer;
-            background: none;
-            border: none;
-            padding: 0;
-            transition: transform 0.3s;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            background: rgba(255,255,255,0.1);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
         }
 
         .close:hover {
-            transform: scale(1.2);
+            background: rgba(255,255,255,0.2);
+            transform: rotate(90deg);
         }
 
         .nav-btn {
             position: fixed;
             top: 50%;
             transform: translateY(-50%);
-            background: white;
-            color: #ff6b9d;
-            border: 3px solid #ff8fab;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
             font-size: 40px;
-            padding: 20px 25px;
+            width: 60px;
+            height: 60px;
             cursor: pointer;
             border-radius: 50%;
             transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(252,182,159,0.4);
-            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 300;
         }
 
         .nav-btn:hover {
-            background: #ff6b9d;
-            color: white;
+            background: rgba(102,126,234,0.5);
+            border-color: rgba(102,126,234,0.8);
             transform: translateY(-50%) scale(1.1);
         }
 
         .prev {
-            left: 20px;
+            left: 30px;
         }
 
         .next {
-            right: 20px;
+            right: 30px;
         }
 
         .modal-number {
             position: absolute;
-            bottom: -50px;
+            bottom: -60px;
             left: 50%;
             transform: translateX(-50%);
             color: white;
-            font-size: 1.4em;
-            background: rgba(255,255,255,0.3);
-            padding: 12px 30px;
-            border-radius: 30px;
-            font-weight: 600;
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255,255,255,0.5);
+            font-size: 1.5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            box-shadow: 0 10px 30px rgba(102,126,234,0.4);
         }
 
         @media (max-width: 768px) {
             h1 {
-                font-size: 2em;
+                font-size: 2.5em;
+            }
+
+            .hero {
+                height: 30vh;
+                min-height: 200px;
             }
 
             .gallery {
@@ -187,28 +253,39 @@
                 gap: 15px;
             }
 
+            .container {
+                padding: 40px 15px;
+            }
+
             .nav-btn {
                 font-size: 30px;
-                padding: 15px 20px;
+                width: 50px;
+                height: 50px;
             }
 
             .prev {
-                left: 10px;
+                left: 15px;
             }
 
             .next {
+                right: 15px;
+            }
+
+            .gallery-item .number {
+                top: 10px;
                 right: 10px;
+                padding: 6px 12px;
+                font-size: 0.85em;
             }
         }
     </style>
 </head>
 <body>
+    <div class="hero">
+        <h1>104</h1>
+    </div>
+
     <div class="container">
-        <div class="header">
-            <h1>💝✨ 104の思い出 ✨💝</h1>
-            <p class="subtitle">241枚の大切な思い出</p>
-        </div>
-        
         <div class="gallery" id="gallery"></div>
     </div>
 
@@ -235,9 +312,9 @@
         
         let currentIndex = 0;
         let loadedCount = 0;
-        const initialLoad = 30; // 最初に30枚だけ表示
+        const initialLoad = 30;
 
-        // 初期表示（最初の30枚）
+        // 初期表示
         for (let i = 1; i <= Math.min(initialLoad, totalImages); i++) {
             createGalleryItem(i);
             loadedCount = i;
@@ -251,7 +328,6 @@
             const scrollBottom = window.innerHeight + window.scrollY;
             const pageHeight = document.documentElement.scrollHeight;
             
-            // ページ下部に近づいたら追加読み込み
             if (scrollBottom > pageHeight - 500) {
                 isLoading = true;
                 const loadUntil = Math.min(loadedCount + 20, totalImages);
@@ -270,7 +346,7 @@
             item.className = 'gallery-item';
             item.innerHTML = `
                 <img src="images/${i}.jpg" alt="思い出 ${i}" loading="lazy">
-                <div class="number">💕 No. ${i} 💕</div>
+                <div class="number">${i}</div>
             `;
             item.onclick = () => openModal(i);
             gallery.appendChild(item);
@@ -290,7 +366,7 @@
 
         function updateModalImage() {
             modalImg.src = `images/${currentIndex}.jpg`;
-            modalNumber.textContent = `💕 No. ${currentIndex} 💕`;
+            modalNumber.textContent = `${currentIndex}`;
         }
 
         function showPrev() {
