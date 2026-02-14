@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>104の思い出</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 40px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 25px;
+            box-shadow: 0 8px 25px rgba(252,182,159,0.3);
+        }
+
+        h1 {
+            color: #ff6b9d;
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(255,107,157,0.2);
+        }
+
+        .subtitle {
+            color: #ff8fab;
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .gallery-item {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(252,182,159,0.3);
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-8px) rotate(1deg);
+            box-shadow: 0 15px 30px rgba(252,182,159,0.5);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-item .number {
+            padding: 18px;
+            text-align: center;
+            color: #ff6b9d;
+            font-size: 1.1em;
+            background: linear-gradient(135deg, #fff5f7 0%, #ffe4ec 100%);
+            font-weight: 600;
+        }
+
+        /* モーダル */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,107,157,0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 15px;
+            box-shadow: 0 15px 50px rgba(255,255,255,0.3);
+            border: 5px solid white;
+        }
+
+        .close {
+            position: absolute;
+            top: -50px;
+            right: 0;
+            color: white;
+            font-size: 45px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+            transition: transform 0.3s;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .close:hover {
+            transform: scale(1.2);
+        }
+
+        .nav-btn {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            color: #ff6b9d;
+            border: 3px solid #ff8fab;
+            font-size: 40px;
+            padding: 20px 25px;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(252,182,159,0.4);
+            font-weight: bold;
+        }
+
+        .nav-btn:hover {
+            background: #ff6b9d;
+            color: white;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .prev {
+            left: 20px;
+        }
+
+        .next {
+            right: 20px;
+        }
+
+        .modal-number {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 1.4em;
+            background: rgba(255,255,255,0.3);
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.5);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+
+            .nav-btn {
+                font-size: 30px;
+                padding: 15px 20px;
+            }
+
+            .prev {
+                left: 10px;
+            }
+
+            .next {
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💝✨ 104の思い出 ✨💝</h1>
+            <p class="subtitle">241枚の大切な思い出</p>
+        </div>
+        
+        <div class="gallery" id="gallery"></div>
+    </div>
+
+    <!-- モーダル -->
+    <div class="modal" id="modal">
+        <button class="nav-btn prev" id="prevBtn">‹</button>
+        <div class="modal-content">
+            <button class="close" id="closeBtn">&times;</button>
+            <img id="modalImg" src="" alt="">
+            <div class="modal-number" id="modalNumber"></div>
+        </div>
+        <button class="nav-btn next" id="nextBtn">›</button>
+    </div>
+
+    <script>
+        const totalImages = 241;
+        const gallery = document.getElementById('gallery');
+        const modal = document.getElementById('modal');
+        const modalImg = document.getElementById('modalImg');
+        const modalNumber = document.getElementById('modalNumber');
+        const closeBtn = document.getElementById('closeBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        let currentIndex = 0;
+        let loadedCount = 0;
+        const initialLoad = 30; // 最初に30枚だけ表示
+
+        // 初期表示（最初の30枚）
+        for (let i = 1; i <= Math.min(initialLoad, totalImages); i++) {
+            createGalleryItem(i);
+            loadedCount = i;
+        }
+
+        // スクロールで追加読み込み
+        let isLoading = false;
+        window.addEventListener('scroll', () => {
+            if (isLoading || loadedCount >= totalImages) return;
+            
+            const scrollBottom = window.innerHeight + window.scrollY;
+            const pageHeight = document.documentElement.scrollHeight;
+            
+            // ページ下部に近づいたら追加読み込み
+            if (scrollBottom > pageHeight - 500) {
+                isLoading = true;
+                const loadUntil = Math.min(loadedCount + 20, totalImages);
+                
+                for (let i = loadedCount + 1; i <= loadUntil; i++) {
+                    createGalleryItem(i);
+                }
+                
+                loadedCount = loadUntil;
+                isLoading = false;
+            }
+        });
+
+        function createGalleryItem(i) {
+            const item = document.createElement('div');
+            item.className = 'gallery-item';
+            item.innerHTML = `
+                <img src="images/${i}.jpg" alt="思い出 ${i}" loading="lazy">
+                <div class="number">💕 No. ${i} 💕</div>
+            `;
+            item.onclick = () => openModal(i);
+            gallery.appendChild(item);
+        }
+
+        function openModal(imageNum) {
+            currentIndex = imageNum;
+            updateModalImage();
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function updateModalImage() {
+            modalImg.src = `images/${currentIndex}.jpg`;
+            modalNumber.textContent = `💕 No. ${currentIndex} 💕`;
+        }
+
+        function showPrev() {
+            currentIndex--;
+            if (currentIndex < 1) currentIndex = totalImages;
+            updateModalImage();
+        }
+
+        function showNext() {
+            currentIndex++;
+            if (currentIndex > totalImages) currentIndex = 1;
+            updateModalImage();
+        }
+
+        closeBtn.onclick = closeModal;
+        prevBtn.onclick = showPrev;
+        nextBtn.onclick = showNext;
+
+        modal.onclick = (e) => {
+            if (e.target === modal) closeModal();
+        };
+
+        document.addEventListener('keydown', (e) => {
+            if (!modal.classList.contains('active')) return;
+            
+            if (e.key === 'Escape') closeModal();
+            if (e.key === 'ArrowLeft') showPrev();
+            if (e.key === 'ArrowRight') showNext();
+        });
+    </script>
+</body>
+</html>
